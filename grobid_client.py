@@ -19,17 +19,21 @@ require something scalable too, which is not implemented for the moment.
 '''
 class grobid_client(ApiClient):
 
-    def __init__(self, config_path='./config.json'):
+    def __init__(self, config_path='./config.json', config_dict={}):
         self.config = None
-        self._load_config(config_path)
+        self._load_config(config_dict, path=config_path)
+        self._test_server()
 
-    def _load_config(self, path='./config.json'):
+    def _load_config(self, config_dict, path='./config.json'):
         """
         Load the json configuration 
         """
         config_json = open(path).read()
         self.config = json.loads(config_json)
-
+        for key in config_dict:
+            self.config[key] = config_dict[key]
+    
+    def _test_server(self):
         # test if the server is up and running...
         the_url = 'http://'+self.config['grobid_server']
         if len(self.config['grobid_port'])>0:
